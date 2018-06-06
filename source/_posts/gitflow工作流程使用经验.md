@@ -24,20 +24,66 @@ Gitflow工作流没有用超出功能分支工作流的概念和命令, 而是�
 ![avatar](gitflow工作流程使用经验/gitflow.png)
 
 主要分支:
-* Master(绿色): 永远处在 production-ready 状态；
-* Develop(橙色): 最新的下次发布开发状态；
+* Master(绿色): 主分支，保持稳定，不允许直接提交代码，只能从release分支和hotfix分支发起merge请求
+* Develop(橙色): 开发分支，相对稳定，代码优化以及功能性开发；
 
 辅助分支:
-* Feature(蓝色): 开发新功能都从 develop 分支新建出来，完成后合并（merge）回 develop分支
-* Release(黄色): 准备要 release 的版本，只修 bugs。从 develop 分支出来，完成后 merge 回 master 和 develop
-* Hotfix(灰色): 等不及 release 版本就必须马上修 master 赶上线的情况。会从 master 分支出来，完成后 merge 回 master 和 develop
+* Feature(蓝色): 开发新功能都从 develop 分支新建出来，完成后合并（merge）回 develop分支；
+* Release(黄色): 准备要 release 的版本，只修改 bug。从 develop 分支出来，完成后 merge 回 master 和 develop
+* Hotfix(灰色): 修复bug分支，等不及 release 版本就必须马上修复 master 赶上线的情况。会从 master 分支出来，完成后 merge 回 master 和 develop
 
 结合实际的使用情况，我增加了一些规范：
-1. master分支，需要时刻和生产环境保持一致，develop分支与测试环境保持一致，后期我计划加入持续集成上线的流程，这两个分支完成修改后将自动打包上传至对应环境，保持代码的一致性；
-2. feature分支就是开发人员本地的分支，可以一个人一个分支，也可以多个人公用一个分支，建议按照功能点来新建分支，每个功能是一个分支，开发人员自测要在feature分支完成，自测通过后，merge到develop分支，提交由测试人员测试；
-3. 测试人员在测试环境测试出bug，需要新建release分支，开发人员在release分支修复bug，而后merge回develop分支，测试人员再进行测试；
-4. 测试人员测试通过后，将release分支merge到master分支，进行上线发布；
-5. release分支在merge到master分支时，需要先在master分支打tag，作为历史版本；
+1. master分支，有版本管理人员负责，每次上线需要对master分支打版本tag；master需要时刻和生产环境保持一致，合并master分支由1-2个管理员负责，开发人员不可以直接提交到master分支；
+2. develop分支，与测试环境保持一致；不建议直接在develop分支开发，尽可能以功能分支合并的形式更新develop分支，保证develop分支可用性；后期将加入持续集成，develop分支对应测试环境；
+3. feature分支，是开发人员主要开发的分支，建议按照功能点来新建分支，每个功能是一个分支，开发人员自测要在feature分支完成，自测通过后，在上线周期内merge到develop分支，提交由测试人员测试；
+4. 测试人员在测试环境测试出bug，指定开发人员需要基于develop新建release分支，开发人员在release分支修复bug，而后merge回develop分支，测试人员再进行测试；
+5. 测试人员测试通过后，将release分支merge到master分支，进行上线发布；
 6. 上线后，再次出现bug，需要开发人员在master分支基础上，新建hotfix分支，修复bug，修复后，merge到develop分支测试，测试通过后再merge到master分支，重新上线发布；
 7. 如果上线失败（出现未能解决的bug，或者因为用户层面的原因）发布人员从master分支回退到上一个tag版本，然后执行上线回退；
+
+git常用命令汇总：
+1. 远程代码拉取到本地：
+```bash
+    git clone xxx
+    git checkout -b develop origin/develop
+```
+2. 新建feature分支，命名方式以feature/功能名
+```bash
+	git checkout -b [branch-name]
+	/* 新建分支只是在本地，需要把分支提交到远程服务器 */
+	git push origin [branch-name]:[branch-name] 
+```
+3. 开发人员提交代码到feature分支
+```bash
+	git add *
+    git commit -m '备注'
+```
+4. feature分支开发完成后，将本地的代码变更提交到远程
+```bash
+    /* 执行代码拉取操作，防止代码冲突 */
+	git pull -rebase
+	/* 解决代码冲突后，推送代码到远程仓库*/
+	git push origin [branch-name] 
+```
+5. 本地自测过之后，合并feature分支到develop分支
+```bash
+	git checkout develop
+	git merge [branch-name]
+```
+6. 合并完成后，删除对应的feature分支
+```bash
+	/* 删除本地分支 */
+	git branch -d [branch-name]  
+	/* 删除远程分支 */
+	git push origin --delete [branch-name]  
+```
+其它常用命令：
+```bash
+    /* 查看分支信息，包含本地和远程 */
+	git branch -a
+	/* 切换到指定分支 */ 
+	git checkout [branch-name]
+	/* 查看当前分支状态 */
+	git status
+```
 

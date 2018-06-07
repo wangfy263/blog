@@ -100,4 +100,5 @@ gitFlow一些常用命令汇总：
 Git工具推荐
 ---
 git Bash：  window下用适用于git的命令行工具，建议熟悉git还是从命令行开始；
-sourceTree：拥有可视化界面的项目版本控制软件，适用于git项目管理
+sourceTree：拥有可视化界面的项目版本控制软件，适用于git项目管理，可以一目了然的看到分支合并的情况，同时可以看到每次提交时的文件列表的修改情况
+![sourceTree](sourceTree.jpg)

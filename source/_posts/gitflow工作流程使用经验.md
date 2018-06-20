@@ -20,7 +20,7 @@ tags:
 Git的优点
 ---
 1. 由于是分布式，所有本地库包含了远程库的所有内容。
-2. 优秀的分支模型，打分支以及合并分支，机器方便。
+2. 优秀的分支模型，打分支以及合并分支，极其方便。
 3. 快速，Git由于代码都在本地，打分支和合并分支及其快速
 
 但即使是Git，没有一套规范约束，随着项目周期变长，参与人员变多，依旧会出现各种问题；
@@ -34,25 +34,30 @@ Gitflow工作流通过为功能开发, 发布准备和维护分配独立的分�
 Gitflow工作流没有用超出功能分支工作流的概念和命令, 而是为不同的分支分配一个很明确的角色, 并定义分支之间如何和什么时候进行交互.
 ![avatar](gitflow工作流程使用经验/gitflow.png)
 
-主要分支:
+#### 主要分支:
 * Master(绿色): 主分支，保持稳定，不允许直接提交代码，只能从release分支和hotfix分支发起merge请求
 * Develop(橙色): 开发分支，相对稳定，代码优化以及功能性开发；
 
-辅助分支:
+#### 辅助分支:
 * Feature(蓝色): 开发新功能都从 develop 分支新建出来，完成后合并（merge）回 develop分支；
 * Release(黄色): 准备要 release 的版本，只修改 bug。从 develop 分支出来，完成后 merge 回 master 和 develop
 * Hotfix(灰色): 修复bug分支，等不及 release 版本就必须马上修复 master 赶上线的情况。会从 master 分支出来，完成后 merge 回 master 和 develop
 
 在实际使用中，根据现场的情况，做了一些调整：
 1. master分支，有版本管理人员负责，每次上线需要对master分支打版本tag；master需要时刻和生产环境保持一致，合并master分支由1-2个管理员负责，开发人员不可以直接提交到master分支；
-2. develop分支，与测试环境保持一致；不建议直接在develop分支开发，尽可能以功能分支合并的形式更新develop分支，保证develop分支可用性；后期将加入持续集成，develop分支对应测试环境；
+2. develop分支，与测试环境保持一致；不在develop分支直接开发，尽可能以功能分支合并的形式更新develop分支，保证develop分支可用性；后期将加入持续集成，develop分支的稳定是持续集成的前提条件；
 3. feature分支，是开发人员主要开发的分支，建议按照功能点来新建分支，每个功能是一个分支，开发人员自测要在feature分支完成，自测通过后，在上线周期内merge到develop分支，提交由测试人员测试；
 4. 测试人员在测试环境测试出bug，指定开发人员需要基于develop新建release分支，开发人员在release分支修复bug，而后merge回develop分支，测试人员再进行测试；
 5. 测试人员测试通过后，将release分支merge到master分支，进行上线发布；
 6. 上线后，再次出现bug，需要开发人员在master分支基础上，新建hotfix分支，修复bug，修复后，merge到develop分支测试，测试通过后再merge到master分支，重新上线发布；
 7. 如果上线失败（出现未能解决的bug，或者因为用户层面的原因）发布人员从master分支回退到上一个tag版本，然后执行上线回退；
+8. release分支和hotfix分支在bug修复后要删除，下次修复新bug时再新建分支，修复bug需要在最新的分支版本上进行；
 
-gitFlow一些常用命令汇总：
+![分支列表](gitBranch.jpg)
+
+上图是我的分支列表，由于正在开发世界杯的相关功能，因此当前处在世界杯功能分支（feature/worldCup）,红色的部分是远程分支，可以看到feature分支有4个，对应的是正在开发的4个功能；
+
+##### gitFlow一些常用命令汇总
 1. 远程代码拉取到本地：
 ```bash
     git clone xxx

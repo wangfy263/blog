@@ -78,4 +78,4 @@ Path to Git executable这里会从环境变量的配置中找git，找不到会�
 ##### 部署集成环境遇到的坑：
 1、git要配置环境变量，否则执行构建时会提示找不到命令；
 2、首次配置需要在jenkins下载的项目中，先执行npm install，安装好相关模块；
-3、需要在jenkins中按照nodejs插件，否则即使主机上安装有nodejs和npm也无法执行npm命令
+3、需要在jenkins中安装nodejs插件，否则即使主机上安装有nodejs和npm也无法执行npm命令

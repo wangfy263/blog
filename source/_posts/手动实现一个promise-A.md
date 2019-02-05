@@ -20,6 +20,3 @@ Promise/A+规范
 * fulfilled状态：promise的状态不可变更，并且必须有一个值，且这个值不能被改变；
 * rejected状态： promise的状态不可变更，并且必须有一个原因，且这个原因不可改变；
 
-### then方法
-一个Promise必须提供一个then
-

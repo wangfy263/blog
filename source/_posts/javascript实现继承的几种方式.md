@@ -40,7 +40,7 @@ function SubType(){
 }
 ```
 父类属性会随着构造函数被调用，加在子类的实例上（这样就不会出父类属性共享的问题，因为属性是子类实例自己的属性了）
-#### new
+### new
 这里的实现依据是new操作符的行为，当对构造函数执行new操作符时，行为如下(以new SubType()为例)：
 ```js
 var obj = {};
@@ -82,8 +82,8 @@ var superType = {
 }
 var instance = Object.create(superType);
 ```
-Object.create()
----
+
+### Object.create()
 IE8以上（不包含）可以直接使用，IE8需要自行实现：
 ```js
 function object(obj){
